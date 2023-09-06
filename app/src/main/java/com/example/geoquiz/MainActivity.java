@@ -33,17 +33,16 @@ public class MainActivity extends AppCompatActivity {
 
         /* Question Text View */
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-        int question = mQuestionBank[mCurrentIndex].getTextResId();
-        mQuestionTextView.setText(question);
+
+        updateQuestion();
 
         /* NEXT button */
         mNextButton = (Button) findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                mCurrentIndex = (mCurrentIndex+1) % mQuestionBank.length;
-                int question = mQuestionBank[mCurrentIndex].getTextResId();
-                mQuestionTextView.setText(question);
+                mCurrentIndex = (mCurrentIndex+1) % mQuestionBank.length; // Modulo, trick to start at new pos 0 again!
+                updateQuestion();
             }
         });
 
@@ -52,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mTrueButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Toast toast_correct = Toast.makeText(MainActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT);
-                toast_correct.setGravity(Gravity.BOTTOM, 0, 0);
-                toast_correct.show();
+                checkAnswer(true);
             }
         });
 
@@ -63,11 +60,22 @@ public class MainActivity extends AppCompatActivity {
         mFalseButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Toast toast_incorrect = Toast.makeText(MainActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT);
-                toast_incorrect.setGravity(Gravity.BOTTOM, 0, 0);
-                toast_incorrect.show();
+                checkAnswer(false);
             }
         });
 
+    }
+
+    private void updateQuestion(){
+        int question = mQuestionBank[mCurrentIndex].getTextResId();
+        mQuestionTextView.setText(question);
+    }
+
+    private void checkAnswer(boolean userPressedTrue){
+        Toast toast = Toast.makeText(MainActivity.this,
+                userPressedTrue == mQuestionBank[mCurrentIndex].isAnswerTrue() ? R.string.correct_toast : R.string.incorrect_toast,
+            Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM, 0, 0);
+        toast.show();
     }
 }
