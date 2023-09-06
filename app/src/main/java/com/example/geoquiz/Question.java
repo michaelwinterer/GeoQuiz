@@ -20,7 +20,7 @@ public class Question {
         mAnswerTrue = answerTrue;
     }
 
-    public Question(int textResId, boolean answerTrue){
+    public Question(int textResId, boolean answerTrue) {
         mTextResId = textResId;
         mAnswerTrue = answerTrue;
     }

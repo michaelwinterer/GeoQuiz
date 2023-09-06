@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
+    private Button mPrevButton;
     private TextView mQuestionTextView;
 
     private int mCurrentIndex = 0;
@@ -33,7 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
         /* Question Text View */
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-
+        mQuestionTextView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                showNextQuestion();
+            }
+        });
         updateQuestion();
 
         /* NEXT button */
@@ -41,8 +47,16 @@ public class MainActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                mCurrentIndex = (mCurrentIndex+1) % mQuestionBank.length; // Modulo, trick to start at new pos 0 again!
-                updateQuestion();
+                showNextQuestion();
+            }
+        });
+
+        /* PREV button */
+        mPrevButton = (Button) findViewById(R.id.prev_button);
+        mPrevButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                showPrevQuestion();
             }
         });
 
@@ -77,5 +91,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM, 0, 0);
         toast.show();
+    }
+
+    private void showNextQuestion(){
+        mCurrentIndex = (mCurrentIndex+1) % mQuestionBank.length; // Modulo, trick to start at new pos 0 again!
+        updateQuestion();
+    }
+
+    private void showPrevQuestion(){
+        // mCurrentIndex = (mCurrentIndex == 0) && (mQuestionBank.length-1) || (mCurrentIndex - 1);
+        mCurrentIndex = (mCurrentIndex == 0) ? (mQuestionBank.length-1) : (mCurrentIndex - 1);
+        updateQuestion();
     }
 }
