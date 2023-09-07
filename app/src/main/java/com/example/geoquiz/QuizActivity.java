@@ -13,6 +13,7 @@ import android.util.Log;
 public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final String KEY_INDEX = "index";
 
     private Button mTrueButton;
     private Button mFalseButton;
@@ -36,6 +37,11 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_main); // this is just the xml file w/o the extension
+
+        /* restore the index if the app is not destroyed yet */
+        if(savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+        }
 
         /* Question Text View */
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
@@ -86,6 +92,13 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle saveInstanceState){
+        super.onSaveInstanceState(saveInstanceState);
+        Log.d(TAG, "onSaveInstanceState");
+        saveInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+    }
+
+    @Override
     public void onStart(){
         super.onStart();
         Log.d(TAG, "onStart() called");
@@ -128,12 +141,24 @@ public class QuizActivity extends AppCompatActivity {
 
     private void showNextQuestion(){
         mCurrentIndex = (mCurrentIndex+1) % mQuestionBank.length; // Modulo, trick to start at new pos 0 again!
+        checkIndex();
         updateQuestion();
     }
 
     private void showPrevQuestion(){
         // mCurrentIndex = (mCurrentIndex == 0) && (mQuestionBank.length-1) || (mCurrentIndex - 1);
         mCurrentIndex = (mCurrentIndex == 0) ? (mQuestionBank.length-1) : (mCurrentIndex - 1);
+        checkIndex();
         updateQuestion();
+    }
+
+    private void checkIndex(){
+        Question question;
+        try{
+            question = mQuestionBank[mCurrentIndex];
+        }
+        catch(ArrayIndexOutOfBoundsException ex){
+            Log.e(TAG, "Index out of bounds!", ex);
+        }
     }
 }
