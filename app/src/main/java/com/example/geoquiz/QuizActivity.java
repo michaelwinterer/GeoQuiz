@@ -171,7 +171,8 @@ public class QuizActivity extends AppCompatActivity {
 
     private void showFinaleToast(){
         if(mAmountCorrect+mAmountIncorrect>=mQuestionBank.length){
-            Toast toast = Toast.makeText(QuizActivity.this, "!!! DONE !!!", Toast.LENGTH_LONG);
+            double result = mAmountCorrect/(double) mQuestionBank.length*100.;
+            Toast toast = Toast.makeText(QuizActivity.this, "!!! DONE !!!\n"+String.format ("%.2f", result)+"% are correct!", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
