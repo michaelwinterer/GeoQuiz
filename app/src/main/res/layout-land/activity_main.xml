@@ -6,33 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".QuizActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        android:layout_height="match_parent">
 
         <!--android:text="@string/question_text"-->
         <TextView
             android:id="@+id/question_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="24dp"
-            tools:layout_editor_absoluteX="94dp"
-            tools:layout_editor_absoluteY="261dp" />
+            android:layout_gravity="top|center_horizontal"
+            android:padding="24dp" />
 
         <LinearLayout
-
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:orientation="horizontal">
 
             <Button
@@ -46,30 +35,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/false_button" />
+
+
         </LinearLayout>
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center|bottom"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/prev_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/arrow_left"
-                android:contentDescription="@string/prev_button"/>
+                android:layout_gravity="left"
+                android:contentDescription="@string/prev_button"
+                app:srcCompat="@drawable/arrow_left" />
 
             <ImageButton
                 android:id="@+id/next_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/arrow_right"
-                android:contentDescription="@string/next_button"/>
+                android:layout_gravity="right"
+                android:contentDescription="@string/next_button"
+                app:srcCompat="@drawable/arrow_right" />
+
+
         </LinearLayout>
 
-    </LinearLayout>
+
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
