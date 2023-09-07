@@ -23,6 +23,9 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
 
+    private int mAmountCorrect = 0;
+    private int mAmountIncorrect = 0;
+
     private Question[] mQuestionBank = new Question[]{
             new Question(R.string.question_australia, true),
             new Question(R.string.question_oceans, true),
@@ -132,16 +135,52 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(boolean userPressedTrue){
-        Toast toast = Toast.makeText(QuizActivity.this,
-                userPressedTrue == mQuestionBank[mCurrentIndex].isAnswerTrue() ? R.string.correct_toast : R.string.incorrect_toast,
-            Toast.LENGTH_SHORT);
+        // Make check and update data
+        int messageResId = 0;
+        if(userPressedTrue == mQuestionBank[mCurrentIndex].isAnswerTrue()){
+            messageResId = R.string.correct_toast;
+            mAmountCorrect++;
+        }else{
+            messageResId = R.string.incorrect_toast;
+            mAmountIncorrect++;
+        }
+        mQuestionBank[mCurrentIndex].setAlreadyAnswered(true);
+        // Enable/disable buttons
+        enableDisableTrueFalseButtons();
+        // Show correct/incorrect toast
+        showCorrectIncorrectToast(messageResId);
+        // Show toast if user answered all
+        showFinaleToast();
+    }
+
+    private void enableDisableTrueFalseButtons(){
+        if(mQuestionBank[mCurrentIndex].isAlreadyAnswered()){
+            mTrueButton.setEnabled(false);
+            mFalseButton.setEnabled(false);
+        } else{
+            mTrueButton.setEnabled(true);
+            mFalseButton.setEnabled(true);
+        }
+    }
+
+    private void showCorrectIncorrectToast(int messageResId){
+        Toast toast = Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM, 0, 0);
         toast.show();
+    }
+
+    private void showFinaleToast(){
+        if(mAmountCorrect+mAmountIncorrect>=mQuestionBank.length){
+            Toast toast = Toast.makeText(QuizActivity.this, "!!! DONE !!!", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
     private void showNextQuestion(){
         mCurrentIndex = (mCurrentIndex+1) % mQuestionBank.length; // Modulo, trick to start at new pos 0 again!
         checkIndex();
+        enableDisableTrueFalseButtons();
         updateQuestion();
     }
 
@@ -149,6 +188,7 @@ public class QuizActivity extends AppCompatActivity {
         // mCurrentIndex = (mCurrentIndex == 0) && (mQuestionBank.length-1) || (mCurrentIndex - 1);
         mCurrentIndex = (mCurrentIndex == 0) ? (mQuestionBank.length-1) : (mCurrentIndex - 1);
         checkIndex();
+        enableDisableTrueFalseButtons();
         updateQuestion();
     }
 

@@ -3,6 +3,15 @@ package com.example.geoquiz;
 public class Question {
     private int mTextResId;
     private boolean mAnswerTrue;
+    private boolean mAlreadyAnswered;
+
+    public void setAlreadyAnswered(boolean alreadyAnswered) {
+        mAlreadyAnswered = alreadyAnswered;
+    }
+
+    public boolean isAlreadyAnswered() {
+        return mAlreadyAnswered;
+    }
 
     public int getTextResId() {
         return mTextResId;
@@ -23,6 +32,7 @@ public class Question {
     public Question(int textResId, boolean answerTrue) {
         mTextResId = textResId;
         mAnswerTrue = answerTrue;
+        mAlreadyAnswered = false;
     }
 
 }
