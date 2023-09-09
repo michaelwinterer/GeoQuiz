@@ -2,6 +2,7 @@ package com.example.geoquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -15,7 +16,9 @@ import android.util.Log;
 public class QuizActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final String KEY_INDEX = "index";
+    private static final int REQUEST_CODE_CHEAT = 0;
 
+    private boolean mIsCheater;
     private Button mTrueButton;
     private Button mFalseButton;
     private ImageButton mNextButton;
@@ -36,6 +39,21 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_americans, true),
             new Question(R.string.question_asia, true)
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+
+        if(requestCode == REQUEST_CODE_CHEAT){
+            if(data == null){
+                return;
+            }
+            mIsCheater = CheatActivity.wasAnswerShown(data);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +81,7 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                mIsCheater = false;
                 showNextQuestion();
             }
         });
@@ -72,6 +91,7 @@ public class QuizActivity extends AppCompatActivity {
         mPrevButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                mIsCheater = false;
                 showPrevQuestion();
             }
         });
@@ -101,7 +121,7 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View view) {
                 boolean isAnswerTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
                 Intent intent = CheatActivity.newIntent(QuizActivity.this, isAnswerTrue);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
 
@@ -151,12 +171,17 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean userPressedTrue){
         // Make check and update data
         int messageResId = 0;
-        if(userPressedTrue == mQuestionBank[mCurrentIndex].isAnswerTrue()){
-            messageResId = R.string.correct_toast;
-            mAmountCorrect++;
+
+        if(mIsCheater){
+            messageResId = R.string.judgement_toast;
         }else{
-            messageResId = R.string.incorrect_toast;
-            mAmountIncorrect++;
+            if(userPressedTrue == mQuestionBank[mCurrentIndex].isAnswerTrue()){
+                messageResId = R.string.correct_toast;
+                mAmountCorrect++;
+            }else{
+                messageResId = R.string.incorrect_toast;
+                mAmountIncorrect++;
+            }
         }
         mQuestionBank[mCurrentIndex].setAlreadyAnswered(true);
         // Enable/disable buttons
