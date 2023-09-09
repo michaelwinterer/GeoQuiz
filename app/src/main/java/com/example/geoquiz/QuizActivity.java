@@ -14,10 +14,13 @@ import android.widget.Toast;
 import android.util.Log;
 
 public class QuizActivity extends AppCompatActivity {
+    /* class variables */
     private static final String TAG = "MainActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_CHEATER = "cheat_flag";
     private static final int REQUEST_CODE_CHEAT = 0;
 
+    /* object members */
     private boolean mIsCheater;
     private Button mTrueButton;
     private Button mFalseButton;
@@ -25,12 +28,9 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mPrevButton;
     private Button mCheatButton;
     private TextView mQuestionTextView;
-
     private int mCurrentIndex = 0;
-
     private int mAmountCorrect = 0;
     private int mAmountIncorrect = 0;
-
     private Question[] mQuestionBank = new Question[]{
             new Question(R.string.question_australia, true),
             new Question(R.string.question_oceans, true),
@@ -40,20 +40,7 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_asia, true)
     };
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode != Activity.RESULT_OK){
-            return;
-        }
-
-        if(requestCode == REQUEST_CODE_CHEAT){
-            if(data == null){
-                return;
-            }
-            mIsCheater = CheatActivity.wasAnswerShown(data);
-        }
-    }
+    /* override of super class */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +51,7 @@ public class QuizActivity extends AppCompatActivity {
         /* restore the index if the app is not destroyed yet */
         if(savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mIsCheater = savedInstanceState.getBoolean(KEY_CHEATER, false);
         }
 
         /* Question Text View */
@@ -132,6 +120,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(saveInstanceState);
         Log.d(TAG, "onSaveInstanceState");
         saveInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        saveInstanceState.putBoolean(KEY_CHEATER, mIsCheater);
     }
 
     @Override
@@ -162,6 +151,21 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy() called");
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+
+        if(requestCode == REQUEST_CODE_CHEAT){
+            if(data == null){
+                return;
+            }
+            mIsCheater = CheatActivity.wasAnswerShown(data);
+        }
+    }
+
     private void updateQuestion(){
         //Log.d(TAG, "Update question text", new Exception());
         int question = mQuestionBank[mCurrentIndex].getTextResId();
@@ -187,7 +191,7 @@ public class QuizActivity extends AppCompatActivity {
         // Enable/disable buttons
         enableDisableTrueFalseButtons();
         // Show correct/incorrect toast
-        showCorrectIncorrectToast(messageResId);
+        showCorrectIncorrectOrCheatToast(messageResId);
         // Show toast if user answered all
         showFinaleToast();
     }
@@ -202,7 +206,7 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
-    private void showCorrectIncorrectToast(int messageResId){
+    private void showCorrectIncorrectOrCheatToast(int messageResId){
         Toast toast = Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM, 0, 0);
         toast.show();
