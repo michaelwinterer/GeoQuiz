@@ -4,6 +4,7 @@ public class Question {
     private int mTextResId;
     private boolean mAnswerTrue;
     private boolean mAlreadyAnswered;
+    private boolean mCheatedOn;
 
     public void setAlreadyAnswered(boolean alreadyAnswered) {
         mAlreadyAnswered = alreadyAnswered;
@@ -33,6 +34,14 @@ public class Question {
         mTextResId = textResId;
         mAnswerTrue = answerTrue;
         mAlreadyAnswered = false;
+    }
+
+    public boolean isCheatedOn() {
+        return mCheatedOn;
+    }
+
+    public void setCheatedOn(boolean cheatedOn) {
+        mCheatedOn = cheatedOn;
     }
 
 }

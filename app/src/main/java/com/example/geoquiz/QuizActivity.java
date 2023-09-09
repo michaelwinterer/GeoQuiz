@@ -69,8 +69,8 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                mIsCheater = false;
                 showNextQuestion();
+                mIsCheater = mQuestionBank[mCurrentIndex].isCheatedOn();
             }
         });
 
@@ -79,8 +79,8 @@ public class QuizActivity extends AppCompatActivity {
         mPrevButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                mIsCheater = false;
                 showPrevQuestion();
+                mIsCheater = mQuestionBank[mCurrentIndex].isCheatedOn();
             }
         });
 
@@ -163,6 +163,7 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
+            mQuestionBank[mCurrentIndex].setCheatedOn(mIsCheater);
         }
     }
 
