@@ -59,10 +59,6 @@ public class QuizActivity extends AppCompatActivity {
             mNumberOfCheats = savedInstanceState.getInt(KEY_CHEATS, 0);
         }
 
-        /* Cheat Info Text View */
-        mCheatInfoTextView = (TextView) findViewById(R.id.cheat_info_text_view);
-        setCheatInfoText();
-
         /* Question Text View */
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         mQuestionTextView.setOnClickListener(new View.OnClickListener(){
@@ -121,6 +117,10 @@ public class QuizActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
+
+        /* Cheat Info Text View */
+        mCheatInfoTextView = (TextView) findViewById(R.id.cheat_info_text_view);
+        setCheatInfoText();
 
     }
 
@@ -183,10 +183,19 @@ public class QuizActivity extends AppCompatActivity {
     private void setCheatInfoText(){
         int numberOfCheatsRemaining = MAX_NUMBER_OF_CHEATS-mNumberOfCheats;
         if(numberOfCheatsRemaining>0){
-            mCheatInfoTextView.setText(numberOfCheatsRemaining + " more Cheats allowed.");
-        }
-        else {
+            if(mQuestionBank[mCurrentIndex].isCheatedOn()){
+                mCheatInfoTextView.setText("Already cheated on this Question.");
+                mCheatButton.setEnabled(false);
+            }else{
+                mCheatInfoTextView.setText(numberOfCheatsRemaining + " more Cheats allowed.");
+                mCheatButton.setEnabled(true);
+            }
+        }else if(numberOfCheatsRemaining==0) {
             mCheatInfoTextView.setText("All Cheats used.");
+            mCheatButton.setEnabled(false);
+        }
+        else { // numberOfCheatsRemaining<0
+            mCheatInfoTextView.setText("DEBUG PLEASE :)");
             mCheatButton.setEnabled(false);
         }
     }
@@ -251,6 +260,7 @@ public class QuizActivity extends AppCompatActivity {
         checkIndex();
         enableDisableTrueFalseButtons();
         updateQuestion();
+        setCheatInfoText();
     }
 
     private void showPrevQuestion(){
@@ -259,6 +269,7 @@ public class QuizActivity extends AppCompatActivity {
         checkIndex();
         enableDisableTrueFalseButtons();
         updateQuestion();
+        setCheatInfoText();
     }
 
     private void checkIndex(){
