@@ -6,6 +6,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -62,18 +63,22 @@ public class CheatActivity extends AppCompatActivity {
     }
 
     private void showAnimationAndHideButton(Button button){
-        int cx = button.getWidth()/2;
-        int cy = button.getHeight()/2;
-        float radius = button.getWidth();
-        Animator anim = ViewAnimationUtils.createCircularReveal(button, cx, cy, radius, 0);
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation){
-               super.onAnimationEnd(animation);
-                button.setVisibility(View.INVISIBLE);
-            }
-        });
-        anim.start();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){ // 26
+            int cx = button.getWidth()/2;
+            int cy = button.getHeight()/2;
+            float radius = button.getWidth();
+            Animator anim = ViewAnimationUtils.createCircularReveal(button, cx, cy, radius, 0);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation){
+                    super.onAnimationEnd(animation);
+                    button.setVisibility(View.INVISIBLE);
+                }
+            });
+            anim.start();
+        } else{
+            button.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setAnswerShownResult(boolean isAnswerShown){
