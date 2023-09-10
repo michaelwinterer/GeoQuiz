@@ -1,10 +1,12 @@
 package com.example.geoquiz;
 
+import androidx.activity.result.ActivityResult;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +14,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONTokener;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.URI;
+import java.net.URL;
 
 public class QuizActivity extends AppCompatActivity {
     /* class variables */
@@ -35,14 +45,7 @@ public class QuizActivity extends AppCompatActivity {
     private int mCurrentIndex = 0;
     private int mAmountCorrect = 0;
     private int mAmountIncorrect = 0;
-    private Question[] mQuestionBank = new Question[]{
-            new Question(R.string.question_australia, true),
-            new Question(R.string.question_oceans, true),
-            new Question(R.string.question_mideast, false),
-            new Question(R.string.question_africa, false),
-            new Question(R.string.question_americans, true),
-            new Question(R.string.question_asia, true)
-    };
+    private Question[] mQuestionBank = new Question[10];
 
     /* override of super class */
 
@@ -51,6 +54,8 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_main); // this is just the xml file w/o the extension
+
+        fillQuestionBank();
 
         /* restore the index if the app is not destroyed yet */
         if(savedInstanceState != null) {
@@ -180,6 +185,33 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+    private static JSONObject getJson(URL url) {
+        ActivityResult IOUtils = null;
+        String json = IOUtils.toString(url, Charset.forName("UTF-8"));
+        try{
+            JSONObject jObj = new JSONObject(json);
+        }catch(JSONException e){
+            // do nothing
+        }
+        return jObj;
+    }
+    private void fillQuestionBank(){
+        for(int i=0;i<10;i++){
+
+            JSONArray arr = new JSONArray(result);
+            try {
+                JSONObject jObj = arr.getJSONObject(0);
+                if(jObj != null){
+                    String question = jObj.getString("question");
+                    String correct_answer = jObj.getString("correct_answer");
+                    mQuestionBank[i] = new Question(question, correct_answer=="True" ? true : false);
+                }
+            }catch(JSONException e){
+                // do nothing
+            }
+        }
+    }
+
     private void setCheatInfoText(){
         int numberOfCheatsRemaining = MAX_NUMBER_OF_CHEATS-mNumberOfCheats;
         if(numberOfCheatsRemaining>0){
@@ -202,7 +234,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private void updateQuestion(){
         //Log.d(TAG, "Update question text", new Exception());
-        int question = mQuestionBank[mCurrentIndex].getTextResId();
+        String question = mQuestionBank[mCurrentIndex].getText();
         mQuestionTextView.setText(question);
     }
 

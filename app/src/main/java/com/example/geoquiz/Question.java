@@ -1,7 +1,7 @@
 package com.example.geoquiz;
 
 public class Question {
-    private int mTextResId;
+    private String mText;
     private boolean mAnswerTrue;
     private boolean mAlreadyAnswered;
     private boolean mCheatedOn;
@@ -14,12 +14,8 @@ public class Question {
         return mAlreadyAnswered;
     }
 
-    public int getTextResId() {
-        return mTextResId;
-    }
-
-    public void setTextResId(int textResId) {
-        mTextResId = textResId;
+    public String getText() {
+        return mText;
     }
 
     public boolean isAnswerTrue() {
@@ -30,8 +26,8 @@ public class Question {
         mAnswerTrue = answerTrue;
     }
 
-    public Question(int textResId, boolean answerTrue) {
-        mTextResId = textResId;
+    public Question(String text, boolean answerTrue) {
+        mText = text;
         mAnswerTrue = answerTrue;
         mAlreadyAnswered = false;
     }
