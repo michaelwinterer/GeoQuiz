@@ -1,12 +1,10 @@
 package com.example.geoquiz;
 
-import androidx.activity.result.ActivityResult;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.JsonReader;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +14,16 @@ import android.widget.Toast;
 import android.util.Log;
 
 import org.json.JSONException;
-import org.json.JSONTokener;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URI;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.io.IOUtils;
+
 
 public class QuizActivity extends AppCompatActivity {
     /* class variables */
@@ -186,29 +188,37 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private static JSONObject getJson(URL url) {
-        ActivityResult IOUtils = null;
-        String json = IOUtils.toString(url, Charset.forName("UTF-8"));
+        JSONObject jObj = null;
         try{
-            JSONObject jObj = new JSONObject(json);
-        }catch(JSONException e){
-            // do nothing
-        }
-        return jObj;
-    }
-    private void fillQuestionBank(){
-        for(int i=0;i<10;i++){
-
-            JSONArray arr = new JSONArray(result);
-            try {
-                JSONObject jObj = arr.getJSONObject(0);
-                if(jObj != null){
-                    String question = jObj.getString("question");
-                    String correct_answer = jObj.getString("correct_answer");
-                    mQuestionBank[i] = new Question(question, correct_answer=="True" ? true : false);
-                }
+            String json = IOUtils.toString(url, StandardCharsets.UTF_8);
+            try{
+                jObj = new JSONObject(json);
             }catch(JSONException e){
                 // do nothing
             }
+        }catch (IOException e){
+            // Do nothing
+        }
+        return jObj;
+    }
+    private void fillQuestionBank() {
+        try {
+            URL url = new URL("https://opentdb.com/api.php?amount=10&type=boolean");
+            InputStream in = url.openStream();
+            for(int i=0;i<10;i++){
+                try {
+                    JSONObject jObj = getJson(url);
+                    if(jObj != null){
+                        String question = jObj.getString("question");
+                        String correct_answer = jObj.getString("correct_answer");
+                        mQuestionBank[i] = new Question(question, correct_answer=="True" ? true : false);
+                    }
+                }catch(JSONException e){
+                    // do nothing
+                }
+            }
+        }catch(MalformedURLException e){
+            // Do nothing
         }
     }
 
