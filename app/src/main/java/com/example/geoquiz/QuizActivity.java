@@ -18,10 +18,14 @@ public class QuizActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final String KEY_INDEX = "index";
     private static final String KEY_CHEATER = "cheat_flag";
+    private static final String KEY_CHEATS = "number_of_cheats";
     private static final int REQUEST_CODE_CHEAT = 0;
+    private static final int MAX_NUMBER_OF_CHEATS = 3;
 
     /* object members */
-    private boolean mIsCheater;
+    private boolean mIsCheater = false;
+    private  int mNumberOfCheats = 0;
+    private TextView mCheatInfoTextView;
     private Button mTrueButton;
     private Button mFalseButton;
     private ImageButton mNextButton;
@@ -52,7 +56,12 @@ public class QuizActivity extends AppCompatActivity {
         if(savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
             mIsCheater = savedInstanceState.getBoolean(KEY_CHEATER, false);
+            mNumberOfCheats = savedInstanceState.getInt(KEY_CHEATS, 0);
         }
+
+        /* Cheat Info Text View */
+        mCheatInfoTextView = (TextView) findViewById(R.id.cheat_info_text_view);
+        setCheatInfoText();
 
         /* Question Text View */
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
@@ -121,6 +130,7 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onSaveInstanceState");
         saveInstanceState.putInt(KEY_INDEX, mCurrentIndex);
         saveInstanceState.putBoolean(KEY_CHEATER, mIsCheater);
+        saveInstanceState.putInt(KEY_CHEATS, mNumberOfCheats);
     }
 
     @Override
@@ -164,6 +174,20 @@ public class QuizActivity extends AppCompatActivity {
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
             mQuestionBank[mCurrentIndex].setCheatedOn(mIsCheater);
+
+            mNumberOfCheats++;
+            setCheatInfoText();
+        }
+    }
+
+    private void setCheatInfoText(){
+        int numberOfCheatsRemaining = MAX_NUMBER_OF_CHEATS-mNumberOfCheats;
+        if(numberOfCheatsRemaining>0){
+            mCheatInfoTextView.setText(numberOfCheatsRemaining + " more Cheats allowed.");
+        }
+        else {
+            mCheatInfoTextView.setText("All Cheats used.");
+            mCheatButton.setEnabled(false);
         }
     }
 

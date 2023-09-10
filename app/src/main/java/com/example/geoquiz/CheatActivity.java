@@ -23,6 +23,7 @@ public class CheatActivity extends AppCompatActivity {
     private TextView mAnswerTextView;
     private TextView mApiLevelTextView;
     private Button mShowAnswerButton;
+    private int mNumberOfCheats;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
