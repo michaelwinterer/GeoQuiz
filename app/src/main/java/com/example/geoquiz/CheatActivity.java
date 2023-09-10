@@ -2,11 +2,14 @@ package com.example.geoquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -45,6 +48,8 @@ public class CheatActivity extends AppCompatActivity {
                     mAnswerTextView.setText(R.string.false_button);
                 }
                 setAnswerShownResult(true);
+
+                showAnimationAndHideButton(mShowAnswerButton);
             }
         });
     }
@@ -54,7 +59,21 @@ public class CheatActivity extends AppCompatActivity {
         super.onSaveInstanceState(saveInstanceState);
         Log.d(TAG, "onSaveInstanceState");
         saveInstanceState.putBoolean(EXTRA_ANSWER_SHOWN, mExtraAnswerShown);
-        //setAnswerShownResult(true);
+    }
+
+    private void showAnimationAndHideButton(Button button){
+        int cx = button.getWidth()/2;
+        int cy = button.getHeight()/2;
+        float radius = button.getWidth();
+        Animator anim = ViewAnimationUtils.createCircularReveal(button, cx, cy, radius, 0);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation){
+               super.onAnimationEnd(animation);
+                button.setVisibility(View.INVISIBLE);
+            }
+        });
+        anim.start();
     }
 
     private void setAnswerShownResult(boolean isAnswerShown){
