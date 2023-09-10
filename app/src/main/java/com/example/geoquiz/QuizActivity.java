@@ -57,6 +57,8 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_main); // this is just the xml file w/o the extension
 
+        testInternet();
+
         fillQuestionBank();
 
         /* restore the index if the app is not destroyed yet */
@@ -187,10 +189,24 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+    private void testInternet(){
+        try {
+            URL url = new URL("https://localhost:9443/genesis/Receipt/Receipt.html");
+            try {
+                url.openConnection();
+                InputStream reader = url.openStream();
+            }catch(IOException e){
+                ;
+            }
+        }catch(MalformedURLException e){
+            ;
+        }
+    }
+
     private static JSONObject getJson(URL url) {
         JSONObject jObj = null;
         try{
-            String json = IOUtils.toString(url, StandardCharsets.UTF_8);
+            String json = IOUtils.toString(url.openStream(), StandardCharsets.UTF_8);
             try{
                 jObj = new JSONObject(json);
             }catch(JSONException e){
@@ -204,7 +220,7 @@ public class QuizActivity extends AppCompatActivity {
     private void fillQuestionBank() {
         try {
             URL url = new URL("https://opentdb.com/api.php?amount=10&type=boolean");
-            InputStream in = url.openStream();
+            //InputStream in = url.openStream();
             for(int i=0;i<10;i++){
                 try {
                     JSONObject jObj = getJson(url);
