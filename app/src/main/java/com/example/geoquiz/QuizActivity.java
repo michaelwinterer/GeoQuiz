@@ -1,3 +1,5 @@
+// org.apache.commons.io
+
 package com.example.geoquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
 
+/*
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,8 +24,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+ */
 
-import org.apache.commons.io.IOUtils;
+//import org.apache.commons.io.IOUtils;
 
 
 public class QuizActivity extends AppCompatActivity {
@@ -47,7 +51,14 @@ public class QuizActivity extends AppCompatActivity {
     private int mCurrentIndex = 0;
     private int mAmountCorrect = 0;
     private int mAmountIncorrect = 0;
-    private Question[] mQuestionBank = new Question[10];
+    //private Question[] mQuestionBank = new Question[10];
+
+    private String text = "Question?";
+    private Question[] mQuestionBank = new Question[]{
+            new Question( text, true),
+            new Question( text, true)
+    };
+
 
     /* override of super class */
 
@@ -57,9 +68,13 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_main); // this is just the xml file w/o the extension
 
-        testInternet();
+        //String teststring = getResources().getString(R.string.question_australia);
+        //Question q = new Question( teststring, true);
+        //Question q = new Question( getResources().getString(R.string.question_australia), true);
 
-        fillQuestionBank();
+        //testInternet();
+
+        //fillQuestionBank();
 
         /* restore the index if the app is not destroyed yet */
         if(savedInstanceState != null) {
@@ -189,6 +204,7 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+    /*
     private void testInternet(){
         try {
             URL url = new URL("https://localhost:9443/genesis/Receipt/Receipt.html");
@@ -237,7 +253,7 @@ public class QuizActivity extends AppCompatActivity {
             // Do nothing
         }
     }
-
+    */
     private void setCheatInfoText(){
         int numberOfCheatsRemaining = MAX_NUMBER_OF_CHEATS-mNumberOfCheats;
         if(numberOfCheatsRemaining>0){
