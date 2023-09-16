@@ -20,11 +20,24 @@ import java.net.MalformedURLException;
 import java.util.concurrent.Executor;
 
 class NetworkOperation extends AsyncTask<Void, Void, Void> {
+    // AsyncResponse stuff, to get the result back!
+    public AsyncResponse delegate = null;
+
+    public interface AsyncResponse {
+        public void processFinish(String output);
+    }
+
+    public NetworkOperation(AsyncResponse delegate){
+        this.delegate = delegate;
+    }
+
+    // AsyncTask stuff to run stuff in background on another thread and so on
     private String mString;
     @Override
     protected Void doInBackground(Void... params) {
         try {
             testMe();
+            //testInternet();
             return null;
         } catch (Exception e) {
             return null;
@@ -34,10 +47,17 @@ class NetworkOperation extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void r){
-        mString = mString;
+    protected void onProgressUpdate(Void... params) {
+        // Nothing
     }
 
+
+    @Override
+    protected void onPostExecute(Void param){
+        delegate.processFinish(mString);
+    }
+
+    // Functions to test the stuff
     private void testMe() throws Exception{
         URL oracle = new URL("https://opentdb.com/api.php?amount=10&type=multiple");
 
@@ -53,7 +73,7 @@ class NetworkOperation extends AsyncTask<Void, Void, Void> {
 
     private void testInternet(){
         try {
-            URL url = new URL("http://info.cern.ch/hypertext/WWW/TheProject.html");
+            URL url = new URL("https://opentdb.com/api.php?amount=10&type=multiple");
             try {
                 url.openConnection();
                 InputStream reader = url.openStream();
@@ -64,43 +84,6 @@ class NetworkOperation extends AsyncTask<Void, Void, Void> {
             ;
         }
         ;
-    }
-
-
-
-    private void testInternetProoven() throws Exception{
-        URL oracle = new URL("https://opentdb.com/api.php?amount=10&type=multiple");
-
-        check_connection(oracle);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(oracle.openStream()));
-        String inputLine;
-        while ((inputLine = in.readLine()) != null)
-            System.out.println(inputLine);
-        in.close();
-    }
-
-    private int check_connection(URL url) throws Exception{
-        HttpURLConnection http_url_conn = (HttpURLConnection) url.openConnection();
-        //http_url_conn.setInstanceFollowRedirects(false);
-        //http_url_conn.setRequestProperty("accept-language", "en-US,en;q=0.9");
-        //http_url_conn.setRequestProperty("user-agent", "MyJavaApp");
-        //http_url_conn.setRequestProperty( "charset", "utf-8");
-        int ret = http_url_conn.getResponseCode();
-        return ret;
-    }
-
-    private void testInternetOracle() throws Exception{
-        System.setProperty("java.net.useSystemProxies", "true");
-        URL oracle = new URL("file:///C:/xampp/htdocs/wordpress/readme.html");
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(oracle.openStream()));
-
-        String inputLine;
-        while ((inputLine = in.readLine()) != null)
-            System.out.println(inputLine);
-        in.close();
     }
 
 }

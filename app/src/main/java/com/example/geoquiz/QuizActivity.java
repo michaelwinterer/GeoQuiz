@@ -68,7 +68,18 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main); // this is just the xml file w/o the extension
 
         // Get questions from an online DB
-        new NetworkOperation().execute(null, null, null);
+        // new NetworkOperation().execute(null, null, String);
+
+        String testString = "A";
+
+        NetworkOperation asyncNetworkTask = new NetworkOperation(new AsyncResponse(){
+            @Override
+            public void processFinish(String output){
+                String jsonStringInfo = output;
+                jsonStringInfo = jsonStringInfo;
+            }
+        }).execute(null, null, null);
+
 
         /* restore the index if the app is not destroyed yet */
         if(savedInstanceState != null) {
