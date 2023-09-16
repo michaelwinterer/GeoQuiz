@@ -6,18 +6,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.io.InputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.concurrent.Executor;
 
 class NetworkOperation extends AsyncTask<Void, Void, Void> {
     // AsyncResponse stuff, to get the result back!
@@ -32,8 +22,7 @@ class NetworkOperation extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         try {
-            testMe();
-            //testInternet();
+            getJsonStreamAndSaveInString();
             return null;
         } catch (Exception e) {
             return null;
@@ -54,8 +43,8 @@ class NetworkOperation extends AsyncTask<Void, Void, Void> {
     }
 
     // Functions to test the stuff
-    private void testMe() throws Exception{
-        URL oracle = new URL("https://opentdb.com/api.php?amount=10&type=multiple");
+    private void getJsonStreamAndSaveInString() throws Exception{
+        URL oracle = new URL("https://opentdb.com/api.php?amount=10&type=boolean");
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(oracle.openStream()));

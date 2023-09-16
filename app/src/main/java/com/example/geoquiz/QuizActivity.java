@@ -15,16 +15,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
 
-/*
+import org.jsoup.Jsoup;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpCookie;
 import java.net.MalformedURLException;
 
 import java.nio.charset.StandardCharsets;
- */
+
 //import org.apache.commons.io.IOUtils;
 
 
@@ -55,13 +58,39 @@ public class QuizActivity extends AppCompatActivity implements NetworkOperation.
     private String text = "Question?";
     private Question[] mQuestionBank = new Question[]{
             new Question( text, true),
+            new Question( text, true),
+            new Question( text, true),
+            new Question( text, true),
+            new Question( text, true),
+            new Question( text, true),
+            new Question( text, true),
+            new Question( text, true),
+            new Question( text, true),
             new Question( text, true)
     };
 
 
     @Override
-    public void processFinish(String output){
+    public void processFinish (String output){
         String stringFromAsync = output;
+        JSONObject jsonObject = getJsonFromString(stringFromAsync);
+
+        try{
+            JSONArray jsonArray = jsonObject.getJSONArray("results");
+            for(int i = 0; i<jsonArray.length(); i++){
+                JSONObject tmpJsonObj = jsonArray.getJSONObject(i);
+                String question = tmpJsonObj.getString("question");
+                
+                //question.replaceAll("&quot;", "\"");
+                question = Jsoup.parse(question).text();
+                
+                String correct_answer = tmpJsonObj.getString("correct_answer");
+                mQuestionBank[i] = new Question(question, correct_answer=="True" ? true : false);
+            }
+        }catch(JSONException e){
+            // do nothing
+        }
+
         stringFromAsync = stringFromAsync;
     }
 
@@ -211,8 +240,18 @@ public class QuizActivity extends AppCompatActivity implements NetworkOperation.
         }
     }
 
+    private static JSONObject getJsonFromString(String text) {
+        JSONObject jObj = null;
+        try{
+            jObj = new JSONObject(text);
+        }catch(JSONException e){
+            // do nothing
+        }
+        return jObj;
+    }
 
-    /*
+
+/*
     private static JSONObject getJson(URL url) {
         JSONObject jObj = null;
         try{
@@ -247,7 +286,8 @@ public class QuizActivity extends AppCompatActivity implements NetworkOperation.
             // Do nothing
         }
     }
-    */
+*/
+
     private void setCheatInfoText(){
         int numberOfCheatsRemaining = MAX_NUMBER_OF_CHEATS-mNumberOfCheats;
         if(numberOfCheatsRemaining>0){
