@@ -85,7 +85,7 @@ public class QuizActivity extends AppCompatActivity implements NetworkOperation.
                 question = Jsoup.parse(question).text();
                 
                 String correct_answer = tmpJsonObj.getString("correct_answer");
-                mQuestionBank[i] = new Question(question, correct_answer=="True" ? true : false);
+                mQuestionBank[i] = new Question(question, correct_answer.equals("True") ? true : false);
             }
         }catch(JSONException e){
             // do nothing

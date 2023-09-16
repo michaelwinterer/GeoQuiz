@@ -44,7 +44,7 @@ class NetworkOperation extends AsyncTask<Void, Void, Void> {
 
     // Functions to test the stuff
     private void getJsonStreamAndSaveInString() throws Exception{
-        URL oracle = new URL("https://opentdb.com/api.php?amount=10&type=boolean");
+        URL oracle = new URL("https://opentdb.com/api.php?amount=10&difficulty=easy&type=boolean");
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(oracle.openStream()));
