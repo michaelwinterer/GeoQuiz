@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 //import org.apache.commons.io.IOUtils;
 
 
-public class QuizActivity extends AppCompatActivity {
+public class QuizActivity extends AppCompatActivity implements NetworkOperation.AsyncResponse {
     /* class variables */
     private static final String TAG = "MainActivity";
     private static final String KEY_INDEX = "index";
@@ -59,6 +59,12 @@ public class QuizActivity extends AppCompatActivity {
     };
 
 
+    @Override
+    public void processFinish(String output){
+        String stringFromAsync = output;
+        stringFromAsync = stringFromAsync;
+    }
+
     /* override of super class */
 
     @Override
@@ -72,13 +78,9 @@ public class QuizActivity extends AppCompatActivity {
 
         String testString = "A";
 
-        NetworkOperation asyncNetworkTask = new NetworkOperation(new AsyncResponse(){
-            @Override
-            public void processFinish(String output){
-                String jsonStringInfo = output;
-                jsonStringInfo = jsonStringInfo;
-            }
-        }).execute(null, null, null);
+        NetworkOperation asyncNetworkTask = new NetworkOperation();
+        asyncNetworkTask.delegate = this;
+        asyncNetworkTask.execute(null, null, null);
 
 
         /* restore the index if the app is not destroyed yet */

@@ -27,10 +27,6 @@ class NetworkOperation extends AsyncTask<Void, Void, Void> {
         public void processFinish(String output);
     }
 
-    public NetworkOperation(AsyncResponse delegate){
-        this.delegate = delegate;
-    }
-
     // AsyncTask stuff to run stuff in background on another thread and so on
     private String mString;
     @Override
