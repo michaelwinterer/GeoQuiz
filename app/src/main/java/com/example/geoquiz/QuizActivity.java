@@ -22,10 +22,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
+
 import java.nio.charset.StandardCharsets;
  */
-
 //import org.apache.commons.io.IOUtils;
 
 
@@ -68,13 +67,8 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_main); // this is just the xml file w/o the extension
 
-        //String teststring = getResources().getString(R.string.question_australia);
-        //Question q = new Question( teststring, true);
-        //Question q = new Question( getResources().getString(R.string.question_australia), true);
-
-        //testInternet();
-
-        //fillQuestionBank();
+        // Get questions from an online DB
+        new NetworkOperation().execute(null, null, null);
 
         /* restore the index if the app is not destroyed yet */
         if(savedInstanceState != null) {
@@ -204,21 +198,8 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    private void testInternet(){
-        try {
-            URL url = new URL("https://localhost:9443/genesis/Receipt/Receipt.html");
-            try {
-                url.openConnection();
-                InputStream reader = url.openStream();
-            }catch(IOException e){
-                ;
-            }
-        }catch(MalformedURLException e){
-            ;
-        }
-    }
 
+    /*
     private static JSONObject getJson(URL url) {
         JSONObject jObj = null;
         try{
