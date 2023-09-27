@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0F3D45"
     tools:context=".CheatActivity">
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,17 +14,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="24dp"
+            android:textColor="#009688"
+            android:textSize="15.0dip"
             android:text="@string/warning_text" />
         <TextView
             android:id="@+id/answer_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="24dp"
+            android:padding="48dp"
+            android:textColor="#009688"
+            android:textSize="25.0dip"
             tools:text="Answer" /> <!-- dummy text for checking in preview -->
         <Button
             android:id="@+id/show_answer_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:scaleX="2.0"
+            android:scaleY="2.0"
             android:text="@string/show_answer_button" />
 
         <TextView
@@ -31,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="24dp"
-            android:textColor="#BABABA"
+            android:textColor="#0F3D45"
             tools:text="API LEVEL" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

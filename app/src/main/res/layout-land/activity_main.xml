@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0F3D45"
     tools:context=".QuizActivity">
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -17,7 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|center_horizontal"
-            android:padding="24dp" />
+            android:padding="24dp"
+            android:textColor="#009688"
+            android:text="Question"
+            android:textSize="25.0dip"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:textColor="#BABABA"
+            android:textColor="#009688"
+            android:textSize="15.0dip"
             tools:text="? more Cheats allowed" />
         <LinearLayout
             android:layout_width="match_parent"
